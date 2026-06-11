@@ -1,6 +1,6 @@
-# Academic Tracker
+# Better BTU CLassroom
 
-A Chrome extension that enhances BTU student portal with GPA calculation, barrier progress visualization, and course management tools. This extension transforms into data-rich dashboards by dynamically injecting interactive UI elements and implementing intelligent data processing algorithms.
+A Google Chrome browser extension that enhances BTU student portal with GPA calculation, barrier progress visualization, and course management tools. This extension transforms into data-rich dashboards by dynamically injecting interactive UI elements and implementing intelligent data processing algorithms.
 ### Link to extension
 
 [BTU PLUS Chrome Extension](https://chromewebstore.google.com/detail/btu+-plus-reworked-pages/ebfenlngaocdpllcejeemfbmnfhhenbh)
