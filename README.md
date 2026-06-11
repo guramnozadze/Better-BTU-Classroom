@@ -33,4 +33,4 @@ Contributions are what make the open-source community such an amazing place to l
 5. Open a Pull Request
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/guramnozadze/Better-BTU-Classroom?tab=GPL-3.0-1-ov-file) for more information.
