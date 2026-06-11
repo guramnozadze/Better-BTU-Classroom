@@ -294,17 +294,13 @@ function calculateGpa(point_credit_pairs) {  // [[POINT, CREDIT]]
     const credits_sum = point_credit_pairs.reduce((acc, [_, credit]) => acc + credit, 0)
     const points_sum = point_credit_pairs.reduce((acc, [point, _]) => acc + point, 0)
 
-    // GPA(S) = Σ(GPA x CR) / ΣCR
-    const gpa_times_credits_sum = point_credit_pairs.reduce((acc, [point, credit]) => {
-            const gpa_per_class = (point - 50) * 0.06 + 1
+    const weighted_average = point_credit_pairs.reduce((acc, [point, credit]) => acc + (point * credit), 0) / credits_sum;
+    const rounded_average = Math.round(weighted_average);
+    const gpa = (rounded_average - 50) * 0.06 + 1;
 
-            const gpa_times_credit = gpa_per_class * credit;
-            return acc + gpa_times_credit;
-        }
-        , 0)
 
     // GPA of finished classes so far
-    return [gpa_times_credits_sum / credits_sum, points_sum, point_credit_pairs.length];
+    return [gpa, points_sum, point_credit_pairs.length];
 }
 
 function showGpaAfterElement(element, point_credit_pairs) {

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BTU+ Plus | Reworked pages - GPA Calculator & Barrier Progress Bar",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "BTU exclusive classroom with GPA calculation and improved barrier progress bar visualization for current semester courses",
   "icons": {
     "16": "images/icon-16.png",
