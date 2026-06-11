@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "BTU+ Plus | Reworked pages - GPA Calculator & Barrier Progress Bar",
-  "version": "0.4.3",
-  "description": "BTU exclusive classroom with GPA calculation and improved barrier progress bar visualization for current semester courses",
+  "name": "Better BTU Classroom | BTU+ Plus | Dowbload materials with 1 click, Compact Schedule, Barrier Progress Bar, GPA Calculation, ",
+  "version": "0.5.0",
+  "description": "BTU exclusive classroom - Download materials with 1 click, compact schedule view, track GPA calculation per semester and improved barrier progress bar visualization for courses",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
@@ -17,7 +17,9 @@
         "https://classroom.btu.edu.ge/ge/student/me/courses",
         "https://classroom.btu.edu.ge/ge/student/me/course/scores/*/*",
         "https://classroom.btu.edu.ge/ge/student/card",
-        "https://classroom.btu.edu.ge/ge/student/me/schedule"
+        "https://classroom.btu.edu.ge/ge/student/me/schedule",
+        "https://classroom.btu.edu.ge/ge/student/me/course/files/*/*",
+        "https://classroom.btu.edu.ge/en/student/me/course/files/*/*"
       ]
     }
   ]

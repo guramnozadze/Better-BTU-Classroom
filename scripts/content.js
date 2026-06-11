@@ -466,3 +466,280 @@ function isNumber(str){
     if(!str) return false;
     return !isNaN(Number(str))
 }
+
+// Training Materials — named download buttons per file and per section
+if (window.location.href.includes("/course/files/")) {
+    setupTrainingMaterialDownloads();
+}
+
+function setupTrainingMaterialDownloads() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .btu-dl-btn {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 1px 7px;
+            font-size: 11px;
+            cursor: pointer;
+            background: transparent;
+            color: #337ab7;
+            border: 1px solid #337ab7;
+            border-radius: 4px;
+            vertical-align: middle;
+            text-decoration: none !important;
+            white-space: nowrap;
+            opacity: 0.75;
+            transition: opacity 0.25s;
+        }
+        .btu-dl-btn:hover { opacity: 1; }
+        .btu-dl-all-btn {
+            display: inline-block;
+            margin-left: 12px;
+            padding: 2px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            background: transparent;
+            color: #31708f;
+            border: 1px solid #31708f;
+            border-radius: 4px;
+            vertical-align: middle;
+            opacity: 0.85;
+            transition: opacity 0.25s;
+        }
+
+        .btu-dl-all-btn:hover { opacity: 1; }
+        .btu-dl-all-btn:disabled { opacity: 0.4; cursor: default; }
+
+        tr.info .glyphicon { top: 3px; }
+    `;
+    document.head.appendChild(style);
+
+    const table = document.querySelector('table');
+    if (!table) {
+        return;
+    }
+
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const sections = [];
+    let currentSection = null;
+
+    rows.forEach(row => {
+        // target glyphicon and make top 3px instead of 1
+
+        // Section header rows have class="info" (blue background rows with instructor name)
+        if (row.classList.contains('info')) {
+            currentSection = { headerRow: row, files: [] };
+            sections.push(currentSection);
+            return;
+        }
+
+        if (!currentSection) return;
+
+        // The downloadable file link is always the <a> in the first <td>
+        const firstCell = row.querySelector('td:first-child');
+        if (!firstCell) return;
+
+        const link = firstCell.querySelector('a');
+        if (!link) return;
+
+        // External link rows have href="" — the actual URL lives in the second <td>
+        // link.getAttribute('href') gives the raw attribute value, "" for external rows
+        const rawHref = link.getAttribute('href');
+        if (!rawHref) return;
+
+        const filename = extractFilename(link);
+        currentSection.files.push({ href: link.href, name: filename });
+
+        // Add individual download button into the second (empty) table cell
+        const secondCell = row.querySelector('td:last-child');
+        const dlBtn = document.createElement('a');
+        dlBtn.className = 'btu-dl-btn';
+        dlBtn.href = link.href;
+        dlBtn.download = filename;
+        dlBtn.textContent = '⬇ Save';
+        dlBtn.title = `Download as "${filename}"`;
+        secondCell.appendChild(dlBtn);
+    });
+
+    // Add "Download All as ZIP" button to each section header
+    sections.forEach(section => {
+        if (section.files.length === 0) return;
+        const headerCell = section.headerRow.querySelector('td');
+        if (!headerCell) return;
+
+        const lecturerName = getLecturerName(section.headerRow);
+
+        const allBtn = document.createElement('button');
+        allBtn.className = 'btu-dl-all-btn';
+        allBtn.textContent = `⬇ Download All (${section.files.length})`;
+        allBtn.title = `Download all ${section.files.length} files as ZIP`;
+        allBtn.addEventListener('click', () => downloadAllAsZip(section.files, lecturerName, allBtn));
+        headerCell.appendChild(allBtn);
+    });
+}
+
+function isSameDomain(href) {
+    try {
+        return new URL(href).hostname === window.location.hostname;
+    } catch {
+        return true; // relative URLs are same-domain
+    }
+}
+
+function extractFilename(linkEl) {
+    const clone = linkEl.cloneNode(true);
+    clone.querySelectorAll('i').forEach(i => i.remove());
+    return clone.textContent.trim();
+}
+
+function getLecturerName(headerRow) {
+    const link = headerRow.querySelector('a[href*="/lector/"]');
+    return link ? link.textContent.trim() : '';
+}
+
+function getCourseName() {
+    const legend = document.querySelector('legend');
+    if (!legend) return 'Course';
+    const text = legend.textContent.trim();
+    const dashIdx = text.indexOf(' - ');
+    return dashIdx !== -1 ? text.slice(dashIdx + 3) : text;
+}
+
+function getExtFromUrl(url) {
+    try {
+        const path = new URL(url).pathname;
+        const dot = path.lastIndexOf('.');
+        return dot !== -1 ? path.slice(dot) : '';
+    } catch {
+        return '';
+    }
+}
+
+async function downloadAllAsZip(files, lecturerName, btn) {
+    const originalText = btn.textContent;
+    btn.disabled = true;
+
+    const courseName = getCourseName();
+    const zipName = `${courseName}-${lecturerName}-მასალები.zip`;
+
+    let completed = 0;
+    btn.textContent = `Fetching 0 / ${files.length}…`;
+
+    const results = await Promise.allSettled(
+        files.map(async ({ href, name }) => {
+            const response = await fetch(href, { credentials: 'include' });
+            const buffer = await response.arrayBuffer();
+            btn.textContent = `Fetching ${++completed} / ${files.length}…`;
+            return { name: name + getExtFromUrl(href), data: new Uint8Array(buffer) };
+        })
+    );
+
+    const entries = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value);
+
+    btn.textContent = 'Building ZIP…';
+    const blob = buildZip(entries);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = zipName;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+}
+
+// Pre-computed CRC-32 lookup table
+const CRC32_TABLE = (() => {
+    const t = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let j = 0; j < 8; j++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+        t[i] = c;
+    }
+    return t;
+})();
+
+function crc32(data) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < data.length; i++) crc = (crc >>> 8) ^ CRC32_TABLE[(crc ^ data[i]) & 0xFF];
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+
+// Builds a ZIP blob from entries using STORE (no compression).
+// PDF/PPTX/DOCX are already compressed containers, so re-compressing wastes time.
+function buildZip(entries) {
+    const enc = new TextEncoder();
+    const localParts = [];
+    const cdParts = [];
+    let offset = 0;
+
+    for (const { name, data } of entries) {
+        const nameBytes = enc.encode(name);
+        const checksum = crc32(data);
+        const size = data.length;
+
+        // Local file header: 30 bytes fixed + filename
+        const lhBuf = new ArrayBuffer(30 + nameBytes.length);
+        const lh = new DataView(lhBuf);
+        lh.setUint32(0,  0x04034b50, true); // signature
+        lh.setUint16(4,  20,         true); // version needed
+        lh.setUint16(6,  0x0800,     true); // flags: UTF-8 filename (bit 11)
+        lh.setUint16(8,  0,          true); // compression: STORE
+        lh.setUint16(10, 0,          true); // mod time
+        lh.setUint16(12, 0,          true); // mod date
+        lh.setUint32(14, checksum,   true); // CRC-32
+        lh.setUint32(18, size,       true); // compressed size
+        lh.setUint32(22, size,       true); // uncompressed size
+        lh.setUint16(26, nameBytes.length, true); // filename length
+        lh.setUint16(28, 0,          true); // extra field length
+        new Uint8Array(lhBuf, 30).set(nameBytes);
+
+        localParts.push(lhBuf, data);
+
+        // Central directory entry: 46 bytes fixed + filename
+        const cdBuf = new ArrayBuffer(46 + nameBytes.length);
+        const cd = new DataView(cdBuf);
+        cd.setUint32(0,  0x02014b50, true); // signature
+        cd.setUint16(4,  20,         true); // version made by
+        cd.setUint16(6,  20,         true); // version needed
+        cd.setUint16(8,  0x0800,     true); // flags: UTF-8 filename (bit 11)
+        cd.setUint16(10, 0,          true); // compression
+        cd.setUint16(12, 0,          true); // mod time
+        cd.setUint16(14, 0,          true); // mod date
+        cd.setUint32(16, checksum,   true); // CRC-32
+        cd.setUint32(20, size,       true); // compressed size
+        cd.setUint32(24, size,       true); // uncompressed size
+        cd.setUint16(28, nameBytes.length, true); // filename length
+        cd.setUint16(30, 0,          true); // extra field length
+        cd.setUint16(32, 0,          true); // file comment length
+        cd.setUint16(34, 0,          true); // disk number start
+        cd.setUint16(36, 0,          true); // internal attributes
+        cd.setUint32(38, 0,          true); // external attributes
+        cd.setUint32(42, offset,     true); // local header offset
+        new Uint8Array(cdBuf, 46).set(nameBytes);
+
+        cdParts.push(cdBuf);
+        offset += 30 + nameBytes.length + size;
+    }
+
+    // End of central directory record: 22 bytes
+    const cdSize = cdParts.reduce((s, b) => s + b.byteLength, 0);
+    const eocdBuf = new ArrayBuffer(22);
+    const eocd = new DataView(eocdBuf);
+    eocd.setUint32(0,  0x06054b50,     true); // signature
+    eocd.setUint16(4,  0,              true); // disk number
+    eocd.setUint16(6,  0,              true); // disk with central dir
+    eocd.setUint16(8,  entries.length, true); // entries on disk
+    eocd.setUint16(10, entries.length, true); // total entries
+    eocd.setUint32(12, cdSize,         true); // central dir size
+    eocd.setUint32(16, offset,         true); // central dir offset
+    eocd.setUint16(20, 0,              true); // comment length
+
+    return new Blob([...localParts, ...cdParts, eocdBuf], { type: 'application/zip' });
+}

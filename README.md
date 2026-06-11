@@ -1,24 +1,36 @@
-# Better BTU CLassroom
+# Better BTU Classroom 🚀
+An open-source Chrome extension designed to modernize, optimize, and add missing quality-of-life features to the Business and Technology University's Classroom portal.
 
-A Google Chrome browser extension that enhances BTU student portal with GPA calculation, barrier progress visualization, and course management tools. This extension transforms into data-rich dashboards by dynamically injecting interactive UI elements and implementing intelligent data processing algorithms.
-### Link to extension
+## 🛠️ Installation
 
-[BTU PLUS Chrome Extension](https://chromewebstore.google.com/detail/btu+-plus-reworked-pages/ebfenlngaocdpllcejeemfbmnfhhenbh)
+### From the Chrome Web Store
+1. Visit the [Chrome Web Store](https://chromewebstore.google.com/detail/btu+-plus-reworked-pages/ebfenlngaocdpllcejeemfbmnfhhenbh).
+2. Click **Add to Chrome**.
 
-## Key Features
+### For Developers (Manual Installation)
+1. Clone this repository: `git clone https://github.com/guramnozadze/better-btu-classroom`
+2. Open Chrome and navigate to `chrome://extensions/`.
+3. Enable **Developer mode** (top-right toggle).
+4. Click **Load unpacked** and select the extension directory.
 
+## ✨ Features
+- Download all materials with one click.
+- Compact Schedule.
+- Visual barrier progress tracking with intuitive color-coding.
 - Real-time GPA calculation with weighted credit analysis
-- Visual barrier progress tracking with intuitive color-coding
-- Schedule optimization with intelligent class merging
 - Custom UI theme toggle for personalized experience
 - Responsive design that seamlessly integrates with existing portal UI
 
-## Technical Implementation
 
-The extension leverages DOM manipulation to dynamically enhance university portals without affecting the underlying system. It employs efficient algorithms for GPA calculation, implements persistent user preferences through localStorage, and uses CSS transformations for visual enhancements - all while maintaining high performance standards.
+## 🤝 Contributing
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## Running this extension locally
 
-1. Clone this repository.
-2. Load this directory in Chrome as an [unpacked extension](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked).
-3. Navigate to a Chrome extension or Chrome Webstore documentation page with an article element. [Here](https://developer.chrome.com/docs/webstore/publish) is an example of a webpage with an article element.
+1. Clone or fork the project or create a issue
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
