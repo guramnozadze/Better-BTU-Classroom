@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Better BTU Classroom | BTU+ Plus | Dowbload materials with 1 click, Compact Schedule, Barrier Progress Bar, GPA Calculation, ",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "BTU exclusive classroom - Download materials with 1 click, compact schedule view, track GPA calculation per semester and improved barrier progress bar visualization for courses",
   "icons": {
     "16": "images/icon-16.png",
