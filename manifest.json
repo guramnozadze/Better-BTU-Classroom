@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Better BTU Classroom, BTU+ Plus | Downloads, Schedule, GPA & Progress Bar",
-  "version": "0.6.1",
-  "description": "BTU exclusive classroom - Download materials with 1 click, compact schedule, GPA calculation per semester & barrier progress bar",
+  "version": "0.6.7",
+  "description": "BTU exclusive classroom - Download materials with 1 click, compact schedule Table, GPA per semester & barrier progress bar",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
