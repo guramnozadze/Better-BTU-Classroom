@@ -27,10 +27,9 @@ The course scores page shows two progress bars for exam eligibility thresholds. 
 
 ## Technical Notes
 
-- **Manifest V3**, content script only — no background service worker, no popup
-- **Zero dependencies** — ZIP generation, CRC-32, GPA math, and all DOM work are vanilla JS
+- **Zero dependencies** — all features are built with vanilla JS
+- Works on **Chrome** and **Microsoft Edge**
 - Matches both `/ge/` and `/en/` locale URL variants across all 5 page types
-- Requires Chrome 116+
 
 ---
 
