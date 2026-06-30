@@ -8,8 +8,11 @@ A Chrome extension that adds missing quality-of-life features to the [Business a
 
 ## Features
 
+### Compact Schedule
+The portal's schedule table is cluttered and hard to scan. The extension merges duplicate course rows, corrects displayed time slots to reflect actual class duration, and trims verbose column headers — giving you a clear view of your week at a glance.
+
 ### Bulk File Downloads
-On any course's materials page, each file gets an individual **⬇ Save** button. Section headers get a **Download All as ZIP** button that fetches all files concurrently and packages them client-side — no server, no external library. The ZIP is built from scratch using `DataView` + `ArrayBuffer` with a hand-rolled CRC-32 implementation and STORE compression (appropriate since PDFs, PPTX, and DOCX are already compressed containers).
+The portal forces you to click each file individually, and downloads them with an opaque ID as the filename instead of the actual title. The extension adds an **⬇ Save** button next to every file with the correct name, and a **Download All as ZIP** button per section so you can grab everything at once.
 
 ### GPA Calculator
 The portal shows raw scores but no GPA. The extension calculates weighted GPA using the formula `Σ(score × credit) / Σcredit`, maps it to a 4-point scale via `(rounded_average − 50) × 0.06 + 1`, and injects the result into three places:
@@ -18,10 +21,7 @@ The portal shows raw scores but no GPA. The extension calculates weighted GPA us
 - On the academic card page — per-semester GPA in each semester row, plus a cumulative GPA row alongside the portal's own (less accurate) GPA
 
 ### Barrier Progress Bar
-The course scores page has two progress bars showing minimum thresholds for exam eligibility. The extension color-codes them green/red based on whether the threshold is met, adds a visible marker line at the exact barrier point when failing, and injects the maximum possible score into the bar. Labels are rewritten to plain Georgian instead of the portal's bureaucratic phrasing.
-
-### Compact Schedule
-The schedule table has a toggle (persisted via `localStorage`) that merges consecutive rows for the same course, adjusts the displayed time slot to reflect actual class duration, and trims verbose column headers.
+The course scores page shows two progress bars for exam eligibility thresholds. The extension color-codes them green or red, adds a marker at the exact barrier point, and displays the maximum possible score inside the bar.
 
 ---
 
