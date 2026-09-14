@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Better BTU Classroom, BTU+ Plus | Downloads, Schedule, GPA & Progress Bar",
-  "version": "0.7.1",
+  "name": "Better BTU Classroom | BTU+ Plus",
+  "version": "0.7.2",
   "description": "BTU classroom - Faster course selection, 1-click material downloads, compact schedule, semester GPA & barrier progress",
   "icons": {
     "16": "images/icon-16.png",
@@ -11,8 +11,11 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "better-btu-classroom@example.com",
-      "strict_min_version": "109.0"
+      "id": "better-btu-classroom@guramnozadze.github.io",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "content_scripts": [
