@@ -746,7 +746,11 @@ function buildZip(entries) {
 
 
 // Toggle: hide course rows unless second <td> has icon-ok or icon-plus
-if (window.location.href.includes("/student/me/index/")) {
+if (window.location.href.includes("student/me/index")) {
+    initCourseFilter();
+}
+
+function initCourseFilter() {
     const style = document.createElement('style');
 
     style.textContent = `
@@ -850,4 +854,3 @@ if (window.location.href.includes("/student/me/index/")) {
       }
   }
 }
-
