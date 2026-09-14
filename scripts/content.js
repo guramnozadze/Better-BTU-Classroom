@@ -743,3 +743,111 @@ function buildZip(entries) {
 
   return new Blob([...localParts, ...cdParts, eocdBuf], { type: 'application/zip' });
 }
+
+
+// Toggle: hide course rows unless second <td> has icon-ok or icon-plus
+if (window.location.href.includes("/student/me/index/")) {
+    const style = document.createElement('style');
+
+    style.textContent = `
+      .btu-course-filter-toggle {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 12px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: normal;
+        vertical-align: middle;
+      }
+
+      .btu-course-filter-toggle input {
+        margin: 0 6px 0 0;
+        cursor: pointer;
+      }
+
+      .btu-course-filter-toggle .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 8px;
+        cursor: pointer;
+        background-color: #eee;
+        color: #999;
+        user-select:none;
+      }
+
+      .btu-course-filter-toggle .check-icon {
+        color: #3c763d;
+      }
+
+      .btu-course-filter-toggle input:checked + .badge {
+        background-color: #f3e5ee;
+        color: #555;
+      }
+    `;
+
+  document.head.appendChild(style);
+
+  const storageKey = 'btu_plus_course_filter_enabled';
+  const enabled = localStorage.getItem(storageKey) === "1";
+
+  function applyFilter(hide) {
+    document.querySelectorAll('table tbody tr').forEach(row => {
+      const secondTd = row.querySelectorAll('td')[1];
+      const icon = secondTd?.querySelector('i');
+
+      const keep =
+        icon &&
+        (
+          icon.classList.contains('icon-ok') ||
+          icon.classList.contains('icon-plus')
+        );
+
+      row.style.display = (hide && !keep) ? 'none' : '';
+    });
+
+    localStorage.setItem(storageKey, hide ? "1" : "0");
+  }
+
+  // Find the legend that says "ჩემი კურსები"
+  const legends = document.querySelectorAll('legend');
+  let targetHeading = null;
+
+  legends.forEach(legend => {
+    if (legend.textContent.trim().includes('ჩემი კურსები')) {
+      targetHeading = legend;
+    }
+  });
+
+  if (targetHeading) {
+    const label = document.createElement('label');
+
+    label.className = 'btu-course-filter-toggle';
+
+      label.innerHTML = `
+        <input type="checkbox" id="courseFilterToggle">
+        <span class="badge">
+          მხოლოდ შეთავაზებული და დამთავრებული კურსები
+          <span class="check-icon">
+            <i class="icon-ok"></i>
+          </span>
+          BTU+
+        </span>
+      `;
+
+    targetHeading.appendChild(label);
+
+    const checkbox = document.getElementById('courseFilterToggle');
+
+    checkbox.checked = enabled;
+
+      checkbox.addEventListener('change', (e) => {
+        applyFilter(e.target.checked);
+      });
+
+      if (enabled) {
+        applyFilter(true);
+      }
+  }
+}
+
