@@ -31,7 +31,7 @@ if(window.location.href.includes("/schedule")){
         rows.forEach(row => {
           if(enabled){
             row.classList.add('btu_plus');
-            changeDamatebitiInformaciaStyles();
+            changeDamatebitiInformaciaHeaderStyles();
             renderTable();
           }else{
             row.classList.remove('btu_plus')
@@ -60,7 +60,7 @@ if(window.location.href.includes("/schedule")){
     rows.forEach((row, rowIndex) => {
       const cells = row.querySelectorAll('td')
       cells.forEach((cell,index) => {
-        cell.style.whiteSpace = 'nowrap';
+        // cell.style.whiteSpace = 'nowrap';
         cell.style.padding = '12px';
         cell.style.paddingLeft = '8px';
         switch (index){
@@ -94,7 +94,11 @@ if(window.location.href.includes("/schedule")){
               cells[0].style.paddingRight = '20px'; // Update the cell
               // Decrease time by 1 hour 10:00 - 10:50 =>>>> 09:00 - 11:00
               // cells[0].textContent = ""
-              cell.textContent = cell.textContent.split('-').slice(2).join('-').trim();
+                if(cell.textContent.includes(" - ")){
+                    
+                
+              cell.textContent = cell.textContent.split(' - ').slice(1).join('-').trim();
+                }
 
             }
             break;
@@ -108,7 +112,7 @@ if(window.location.href.includes("/schedule")){
     })
   }
 
-  function changeDamatebitiInformaciaStyles(){
+  function changeDamatebitiInformaciaHeaderStyles(){
     const table = document.querySelector('table');
     const rows = table.querySelectorAll('tr:not([class])');
     rows.forEach((row, rowIndex) => {
